@@ -18,6 +18,9 @@ import java.lang.annotation.Target;
 @Documented
 public @interface DubboConsumer {
 
+  // 泛化调用修改点
+  String interfaceName();
+
   // 版本
   String version() default "";
 
