@@ -20,16 +20,16 @@ import com.alibaba.dubbo.rpc.RpcException;
 @Activate(group = Constants.CONSUMER)
 public class ConsumerInvokeStaticsFilter extends StaticsFilterHelper {
 
-  @Override
-  public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-    Invoker<?> invocationInvoker = invocation.getInvoker();
-    Class<?> anInterface = invocationInvoker.getInterface();
-    URL url = invocationInvoker.getUrl();
-    String group = url.getParameter(SpringBootStarterDobboConstants.GROUP);
-    String version = url.getParameter(SpringBootStarterDobboConstants.VERSION);
-    ClassIdBean classIdBean = new ClassIdBean(anInterface, group, version);
-    increase(classIdBean, invocation.getMethodName());
-    return invoker.invoke(invocation);
-  }
+    @Override
+    public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        Invoker<?> invocationInvoker = invocation.getInvoker();
+        Class<?> anInterface = invocationInvoker.getInterface();
+        URL url = invocationInvoker.getUrl();
+        String group = url.getParameter(SpringBootStarterDobboConstants.GROUP);
+        String version = url.getParameter(SpringBootStarterDobboConstants.VERSION);
+        ClassIdBean classIdBean = new ClassIdBean(anInterface, group, version);
+        increase(classIdBean, invocation.getMethodName());
+        return invoker.invoke(invocation);
+    }
 }
 

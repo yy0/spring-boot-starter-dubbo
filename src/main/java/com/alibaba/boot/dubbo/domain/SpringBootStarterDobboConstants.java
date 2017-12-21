@@ -9,8 +9,8 @@ package com.alibaba.boot.dubbo.domain;
  */
 public class SpringBootStarterDobboConstants {
 
-  public static final String GROUP = "group";
+    public static final String GROUP = "group";
 
-  public static final String VERSION = "version";
+    public static final String VERSION = "version";
 
 }

@@ -2,6 +2,7 @@ package com.alibaba.boot.dubbo.generic;
 
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.dubbo.common.json.ParseException;
+import com.alibaba.dubbo.rpc.service.GenericException;
 import com.alibaba.dubbo.rpc.service.GenericService;
 
 import java.io.IOException;
@@ -23,11 +24,19 @@ public class GenericClient {
         return genericService.$invoke(methodName, new String[]{Map.class.getTypeName()}, new Object[]{params});
     }
 
-    public Object invoke(String methodName, Object[] args) throws IOException {
+    public <T> T invoke(String methodName, Object[] args, Class<T> clazz) throws IOException {
         String[] params = null;
         if (null != args && args.length > 0) {
             params = new String[]{JSON.json(args)};
         }
-        return genericService.$invoke(methodName, new String[]{Array.class.getTypeName()}, params);
+        Object result = genericService.$invoke(methodName, new String[]{Array.class.getTypeName()}, params);
+        if (null != result && !Void.class.equals(clazz)) {
+            try {
+                return JSON.parse(result.toString(), clazz);
+            } catch (ParseException e) {
+                throw new GenericException(e);
+            }
+        }
+        return null;
     }
 }

@@ -20,14 +20,14 @@ import com.alibaba.dubbo.rpc.RpcException;
 @Activate(group = Constants.PROVIDER)
 public class ProviderInvokeStaticsFilter extends StaticsFilterHelper {
 
-  @Override
-  public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-    Class<?> anInterface = invoker.getInterface();
-    URL url = invoker.getUrl();
-    String group = url.getParameter(SpringBootStarterDobboConstants.GROUP);
-    String version = url.getParameter(SpringBootStarterDobboConstants.VERSION);
-    ClassIdBean classIdBean = new ClassIdBean(anInterface, group, version);
-    increase(classIdBean, invocation.getMethodName());
-    return invoker.invoke(invocation);
-  }
+    @Override
+    public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        Class<?> anInterface = invoker.getInterface();
+        URL url = invoker.getUrl();
+        String group = url.getParameter(SpringBootStarterDobboConstants.GROUP);
+        String version = url.getParameter(SpringBootStarterDobboConstants.VERSION);
+        ClassIdBean classIdBean = new ClassIdBean(anInterface, group, version);
+        increase(classIdBean, invocation.getMethodName());
+        return invoker.invoke(invocation);
+    }
 }

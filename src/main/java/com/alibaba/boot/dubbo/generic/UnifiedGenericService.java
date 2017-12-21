@@ -9,7 +9,9 @@ import com.alibaba.dubbo.rpc.service.GenericService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.ReflectionUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -80,12 +82,21 @@ public class UnifiedGenericService implements GenericService {
     }
 
     private Object invokeMethod(MethodInfo methodInfo, Object[] args) {
-        try {
-            return methodInfo.getMethod().invoke(bean, args);
-        } catch (IllegalAccessException e) {
-            throw new GenericException(e);
-        } catch (InvocationTargetException e) {
-            throw new GenericException(e);
+        Object result;
+        if (null == args) {
+            result = ReflectionUtils.invokeMethod(methodInfo.getMethod(), bean);
         }
+        else {
+            result = ReflectionUtils.invokeMethod(methodInfo.getMethod(), bean, args);
+        }
+        if (null != result) {
+            try {
+                return JSON.json(result);
+            } catch (IOException e) {
+                LOGGER.error("rpc result convert to json exception. result: {}", result);
+                throw new GenericException(e);
+            }
+        }
+        return result;
     }
 }
